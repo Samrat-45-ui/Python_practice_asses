@@ -26,9 +26,9 @@ class SurveyApp:
 
         self.setup_data_frame()
         self.setup_display_frame()
-        
+        self.show_data_collection()
 
-    # --- Step 1 & 2: Setup Data Collection Frame ---
+    # Setup Data Collection Frame ---
     def setup_data_frame(self):
         tk.Label(self.data_frame, text="Data Collection Mode", font=("Arial", 14, "bold")).pack(pady=10)
 
@@ -52,7 +52,7 @@ class SurveyApp:
         tk.Button(self.data_frame, text="Enter Data", command=self.enter_data, bg="lightblue").pack(pady=10)
         tk.Button(self.data_frame, text="Show All", command=self.show_all_records).pack(pady=5)
 
-    # --- Step 3: Setup Display Frame ---
+    # Setup Display Frame ---
     def setup_display_frame(self):
         tk.Label(self.display_frame, text="View Records", font=("Arial", 14, "bold")).pack(pady=10)
 
@@ -72,3 +72,46 @@ class SurveyApp:
 
         # Toggle back button
         tk.Button(self.display_frame, text="Add New Person", command=self.show_data_collection, bg="lightgreen").pack(pady=20)
+
+    #Logic for Data Entry ---
+    def enter_data(self):
+        name = self.name_entry.get()
+        age = self.age_entry.get()
+        phone = self.phone_var.get()
+
+        # Validation check
+        if name == "" or age == "":
+            messagebox.showwarning("Input Error", "Please fill in all fields.")
+            return
+
+        # Create object and store in list
+        new_person = Person(name, age, phone)
+        self.person_list.append(new_person)
+
+        # Print check
+        print(f"Collected: {name}, {age}, Phone: {phone}")
+
+        # Clear widgets
+        self.name_entry.delete(0, tk.END)
+        self.age_entry.delete(0, tk.END)
+        self.phone_var.set("Yes")
+        messagebox.showinfo("Success", f"Data for {name} added!")
+
+    # Display Logic & Navigation for Records
+    def show_all_records(self):
+        if not self.person_list:
+            messagebox.showinfo("Empty", "No data to show yet!")
+            return
+        
+        self.current_index = 0
+        self.update_display()
+        self.display_frame.tkraise()
+
+    def show_data_collection(self):
+        self.data_frame.tkraise()
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = SurveyApp(root)
+    root.mainloop()

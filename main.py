@@ -73,7 +73,7 @@ class SurveyApp:
         # Toggle back button
         tk.Button(self.display_frame, text="Add New Person", command=self.show_data_collection, bg="lightgreen").pack(pady=20)
 
-    #Logic for Data Entry ---
+    # Logic for Data Entry
     def enter_data(self):
         name = self.name_entry.get()
         age = self.age_entry.get()
@@ -97,7 +97,7 @@ class SurveyApp:
         self.phone_var.set("Yes")
         messagebox.showinfo("Success", f"Data for {name} added!")
 
-    # Display Logic & Navigation for Records
+    # Display Logic & Navigation
     def show_all_records(self):
         if not self.person_list:
             messagebox.showinfo("Empty", "No data to show yet!")
@@ -110,7 +110,32 @@ class SurveyApp:
     def show_data_collection(self):
         self.data_frame.tkraise()
 
+    def update_display(self):
+        # Configure labels to show info from current object
+        person = self.person_list[self.current_index]
+        display_text = f"Name: {person.name}\nAge: {person.age}\nMobile: {person.phone_status}"
+        self.info_label.config(text=display_text)
+        
+        # Counter for user context
+        self.root.title(f"Record {self.current_index + 1} of {len(self.person_list)}")
 
+    def show_next(self):
+        # Boundary check
+        if self.current_index < len(self.person_list) - 1:
+            self.current_index += 1
+            self.update_display()
+        else:
+            messagebox.showinfo("End", "You have reached the end of the list.")
+
+    def show_prev(self):
+        # Boundary check
+        if self.current_index > 0:
+            self.current_index -= 1
+            self.update_display()
+        else:
+            messagebox.showinfo("Start", "This is the first record.")
+
+# --- Main Program Execution ---
 if __name__ == "__main__":
     root = tk.Tk()
     app = SurveyApp(root)
